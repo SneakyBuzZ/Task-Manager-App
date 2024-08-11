@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 
-const asyncHandler = (
+export const asyncHandler = (
     requestHandlerFn: (
         req: Request,
         res: Response,
@@ -11,5 +11,3 @@ const asyncHandler = (
         requestHandlerFn(req, res, next).catch(next);
     };
 };
-
-export default asyncHandler;
