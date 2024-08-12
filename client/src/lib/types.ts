@@ -1,7 +1,7 @@
 export type createTaskApiProps = {
-  title: string;
-  content: string;
-  deadline: Date;
+  title?: string;
+  description?: string;
+  deadline?: Date;
 };
 
 export type individualTaskType = {

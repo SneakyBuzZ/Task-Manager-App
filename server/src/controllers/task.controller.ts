@@ -3,6 +3,8 @@ import { asyncHandler, ApiResponse, db, ApiError } from '../utils';
 import { TaskStatus } from '../utils/types';
 import axios from 'axios';
 
+// ALL THE CONTROLLERS THAT WERE MENTIONED IN THE ASSESSMENT DOCUMENT
+
 export const getAllTasks = asyncHandler(async (req: Request, res: Response) => {
     let { limit = 3, skip = 0 } = req.query;
 
@@ -20,6 +22,8 @@ export const getAllTasks = asyncHandler(async (req: Request, res: Response) => {
             content: true,
             deadline: true,
             priority: true,
+            id: true,
+            status: true,
         },
     });
     const allOnProgressTasks = await db.task.findMany({
@@ -36,6 +40,8 @@ export const getAllTasks = asyncHandler(async (req: Request, res: Response) => {
             content: true,
             deadline: true,
             priority: true,
+            id: true,
+            status: true,
         },
     });
     const allToDoTasks = await db.task.findMany({
@@ -52,6 +58,8 @@ export const getAllTasks = asyncHandler(async (req: Request, res: Response) => {
             content: true,
             deadline: true,
             priority: true,
+            id: true,
+            status: true,
         },
     });
     const allTasks = await db.task.findMany({
@@ -65,6 +73,7 @@ export const getAllTasks = asyncHandler(async (req: Request, res: Response) => {
             content: true,
             deadline: true,
             priority: true,
+            id: true,
         },
     });
 
@@ -114,9 +123,6 @@ export const getTaskById = asyncHandler(async (req: Request, res: Response) => {
 export const createTask = asyncHandler(async (req: Request, res: Response) => {
     const { title, content, deadline } = req.body;
 
-    console.log('TITLE: ', title);
-    console.log('CONTENT: ', content);
-
     if (
         [title, content, deadline].some((eachItem) => eachItem?.trim() === '')
     ) {
@@ -143,9 +149,8 @@ export const createTask = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const updateTask = asyncHandler(async (req: Request, res: Response) => {
-    const { title, content, status, deadline } = req.body;
+    const { title, content, deadline } = req.body;
     const { id } = req.params;
-
     if (!id) {
         throw new ApiError(
             400,
@@ -153,14 +158,11 @@ export const updateTask = asyncHandler(async (req: Request, res: Response) => {
         );
     }
 
-    [title, content, deadline, status].some((each) => {
-        if (!each) {
-            throw new ApiError(
-                400,
-                'UPDATE TASK: TASK CONTROLLER : All fields are required'
-            );
-        }
-    });
+    if (
+        [title, content, deadline].some((eachItem) => eachItem?.trim() === '')
+    ) {
+        throw new ApiError(400, 'All fields are required');
+    }
 
     const updatedTask = await db.task.update({
         where: {
@@ -170,7 +172,6 @@ export const updateTask = asyncHandler(async (req: Request, res: Response) => {
             title: String(title),
             content: String(content),
             deadline,
-            status: status as TaskStatus,
         },
     });
 
@@ -202,8 +203,6 @@ export const deleteTaskById = asyncHandler(
             },
         });
 
-        console.log('DELETED ID: ', deletedId);
-
         return res
             .status(200)
             .json(new ApiResponse(200, {}, 'Successfully deleted post'));
@@ -227,5 +226,45 @@ export const streamingApi = asyncHandler(
         return res
             .status(200)
             .json(new ApiResponse(200, data, 'Successfully fetched data'));
+    }
+);
+
+// ADDITIONAL CONTROLLERS
+
+export const changeTaskStatus = asyncHandler(
+    async (req: Request, res: Response) => {
+        const { taskId, status } = req.body;
+
+        if (!taskId) {
+            throw new ApiError(
+                400,
+                'START TASK : TASK CONTROLLER : taskId is required'
+            );
+        }
+
+        const updatedTask = await db.task.update({
+            where: {
+                id: String(taskId),
+            },
+            data: {
+                status: status as TaskStatus,
+            },
+        });
+
+        if (!updateTask) {
+            return res
+                .status(500)
+                .json(new ApiResponse(500, {}, 'Failed to update task status'));
+        }
+
+        return res
+            .status(200)
+            .json(
+                new ApiResponse(
+                    200,
+                    updatedTask,
+                    'Successfully updated task status'
+                )
+            );
     }
 );

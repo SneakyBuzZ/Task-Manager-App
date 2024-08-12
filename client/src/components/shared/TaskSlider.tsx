@@ -1,9 +1,9 @@
 import SliderBadge from '@/components/task-ui/SliderBadge';
-import TaskCard from '../task-ui/TaskCard';
+import TaskCard from '@/components/task-ui/TaskCard';
 import { useEffect, useState } from 'react';
 import { useGetAllTaskApi } from '@/lib/query/query';
 import { individualTaskType } from '@/lib/types';
-import TaskSkeleton from '../task-ui/TaskSkeleton';
+import TaskSkeleton from '@/components/task-ui/TaskSkeleton';
 
 const TaskSlider = () => {
   const [onProgressTasks, setOnProgressTasks] = useState<individualTaskType[]>(
@@ -38,7 +38,6 @@ const TaskSlider = () => {
         </article>
         <aside className="flex flex-row lg:flex-col w-full h-full gap-2 lg:gap-5 lg:py-4">
           {toDoTasks.map((each) => {
-            console.log(each.priority.toLowerCase());
             return (
               <li
                 key={each.title}
@@ -78,7 +77,6 @@ const TaskSlider = () => {
         </div>
         <div className="flex flex-row lg:flex-col w-full h-full gap-2 lg:py-4 lg:gap-5">
           {onProgressTasks.map((each) => {
-            console.log(each.priority.toLowerCase());
             return (
               <li
                 key={each.title}
@@ -118,7 +116,6 @@ const TaskSlider = () => {
         </div>
         <div className="flex flex-row lg:flex-col w-full h-full gap-2 lg:py-4 lg:gap-5">
           {doneTasks.map((each) => {
-            console.log(each.priority.toLowerCase());
             return (
               <li
                 key={each.title}

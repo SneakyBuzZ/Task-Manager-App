@@ -21,7 +21,6 @@ const TaskCard = ({
   taskId,
   taskStatus,
 }: taskCardPropType) => {
-  console.log(badgeClass);
   return (
     <>
       <div className="flex items-center justify-end md:justify-between  font-task-inter">
@@ -35,12 +34,18 @@ const TaskCard = ({
         >
           {badgeLabel}
         </Badge>
-        <TaskCardMenu taskId={taskId} status={taskStatus} />
+        <TaskCardMenu
+          taskId={taskId}
+          status={taskStatus}
+          title={taskTitle!}
+          description={taskDescription!}
+          deadline={taskDeadline!}
+        />
       </div>
       <div className="flex flex-col justify-between h-[70%]">
         <div className="flex-col gap-2">
           <h1 className="text-sm font-semibold lg:text-lg">{taskTitle}</h1>
-          <span className="text-[10px] lg:text-[11px] xl:text-[13px]">
+          <span className="text-[10px] lg:text-[11px] xl:text-[13px] text-task-text-gray">
             {taskDescription}
           </span>
         </div>

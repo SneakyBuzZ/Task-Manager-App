@@ -11,15 +11,31 @@ import {
 import CreateTaskForm from '@/components/shared/CreateTaskForm';
 import SliderBadge from './SliderBadge';
 
-const CreateTaskButton = () => {
+const CreateTaskButton = ({
+  title,
+  description,
+  deadline,
+  children,
+  taskId,
+}: {
+  title?: string;
+  description?: string;
+  deadline?: Date | string;
+  children?: React.ReactNode;
+  taskId?: string;
+}) => {
   return (
     <>
       <Dialog>
         <DialogTrigger className="w-1/6 lg:w-[100%] h-full lg:h-[10%]">
-          <article className="w-full h-full rounded-xl lg:rounded-[1.3rem] flex items-center px-4 py-2 text-task-white gap-2 bg-task-neutral hover:bg-task-neutral">
-            <PlusIcon color="#fff" className="size-4" />
-            <span className="hidden md:block">ADD TASK</span>
-          </article>
+          {children ? (
+            <>{children}</>
+          ) : (
+            <article className="w-full h-full rounded-xl lg:rounded-[1.3rem] flex items-center px-4 py-2 text-task-white gap-2 bg-task-neutral hover:bg-task-neutral">
+              <PlusIcon color="#fff" className="size-4" />
+              <span className="hidden md:block">ADD TASK</span>
+            </article>
+          )}
         </DialogTrigger>
 
         <DialogContent className="w-[333px] h-[504px] flex flex-col rounded-[10px] p-0 px-5 py-1 border border-black">
@@ -37,7 +53,12 @@ const CreateTaskButton = () => {
                 <PlusIcon className="h-4 w-4" color="#0D25FF" />
               </DialogTrigger>
             </article>
-            <CreateTaskForm />
+            <CreateTaskForm
+              deadline={deadline}
+              description={description}
+              title={title}
+              taskId={taskId}
+            />
           </DialogHeader>
         </DialogContent>
       </Dialog>

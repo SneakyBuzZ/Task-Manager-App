@@ -6,12 +6,12 @@ const server = import.meta.env.VITE_SERVER_URL;
 
 export const createTaskApi = async ({
   title,
-  content,
+  description,
   deadline,
 }: createTaskApiProps) => {
   await axios.post(`${server}/tasks`, {
     title: title,
-    content: content,
+    content: description,
     deadline: deadline,
   });
 };
@@ -31,9 +31,30 @@ export const changeTaskStatusApi = async ({
   taskId: string;
   status: taskStatus;
 }) => {
-  console.log('API TASK ID: ', taskId);
   await axios.put(`${server}/tasks`, {
     taskId: taskId,
     status: status,
   });
+};
+
+export const updateTaskApi = async ({
+  taskId,
+  title,
+  content,
+  deadline,
+}: {
+  taskId: string;
+  title: string;
+  content: string;
+  deadline: Date; // Date object
+}) => {
+  await axios.put(`${server}/tasks/${taskId}`, {
+    title,
+    content,
+    deadline,
+  });
+};
+
+export const deleteTaskApi = async ({ taskId }: { taskId: string }) => {
+  await axios.delete(`${server}/tasks/${taskId}`);
 };

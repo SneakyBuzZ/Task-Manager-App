@@ -12,7 +12,6 @@ const TaskStatus = () => {
   useEffect(() => {
     getAllTaskApi()
       .then((response) => {
-        console.log(response);
         const deadTasks = response.allTasks.filter(
           (each: individualTaskType) => {
             const deadlineDate = new Date(each.deadline);

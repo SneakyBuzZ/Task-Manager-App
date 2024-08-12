@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { EllipsisVertical } from 'lucide-react';
-import { Textarea } from '../ui/textarea';
+import { Textarea } from '@/components/ui/textarea';
 
 import {
   Dialog,
@@ -21,35 +21,47 @@ import {
 import { Calendar } from '@/components/ui/calendar';
 import React from 'react';
 import { format } from 'date-fns';
-import { ToastAction } from '@/components/ui/toast';
-import { useToast } from '@/components/ui/use-toast';
-import { useCreateTaskApi } from '@/lib/query/query';
+import { useCreateTaskApi, useUpdateTaskApi } from '@/lib/query/query';
 
-const CreateTaskForm = () => {
-  const { toast } = useToast();
+const CreateTaskForm = ({
+  title,
+  description,
+  deadline,
+  taskId,
+}: {
+  title?: string;
+  description?: string;
+  deadline?: Date | string;
+  taskId?: string;
+}) => {
   const [date, setDate] = React.useState<Date>();
   const form = useForm<z.infer<typeof createTaskSchema>>({
     resolver: zodResolver(createTaskSchema),
     defaultValues: {
-      taskTitle: '',
-      taskDescription: '',
+      taskTitle: title || '',
+      taskDescription: description || '',
     },
   });
 
   const { mutateAsync: createTaskApi } = useCreateTaskApi();
+  const { mutateAsync: updateTaskApi } = useUpdateTaskApi();
 
   async function onSubmit(values: z.infer<typeof createTaskSchema>) {
-    await createTaskApi({
-      title: values.taskTitle,
-      content: values.taskDescription,
-      deadline: date!,
-    });
-
-    toast({
-      title: 'Uh oh! Something went wrong.',
-      description: 'There was a problem with your request.',
-      action: <ToastAction altText="Try again">Try again</ToastAction>,
-    });
+    if (title && description && deadline && taskId) {
+      await updateTaskApi({
+        taskId: taskId,
+        title: values.taskTitle,
+        content: values.taskDescription,
+        deadline: date!,
+      });
+    } else {
+      await createTaskApi({
+        title: values.taskTitle,
+        description: values.taskDescription,
+        deadline: date!,
+      });
+    }
+    window.location.reload();
   }
   return (
     <>
@@ -93,18 +105,19 @@ const CreateTaskForm = () => {
           />
           <div className="flex items-center w-full justify-between font-task-poppins font-medium">
             <div className="flex flex-col justify-center items-start">
-              {!date ? (
+              {deadline ? (
                 <>
                   <Dialog>
-                    <DialogTrigger>
-                      <h1 className="font-semibold text-task-text-gray">
-                        Deadline
-                      </h1>
+                    <DialogTrigger className="font-semibold text-task-text-gray text-sm">
+                      {!deadline ? (
+                        <>{date ? format(date, 'dd-mm-yyyy') : null}</>
+                      ) : (
+                        <>{format(deadline!, 'dd-mm-yyyy')}</>
+                      )}
                     </DialogTrigger>
                     <DialogContent className="w-[315px] h-[298px] rounded-[20px]">
                       <DialogHeader>
                         <DialogTitle></DialogTitle>
-
                         <DialogDescription></DialogDescription>
                         <Calendar
                           className="w-full h-full"
@@ -119,24 +132,52 @@ const CreateTaskForm = () => {
                 </>
               ) : (
                 <>
-                  <Dialog>
-                    <DialogTrigger className="font-semibold text-task-text-gray text-sm">
-                      {date ? format(date, 'PPP') : null}
-                    </DialogTrigger>
-                    <DialogContent className="w-[315px] h-[298px] rounded-[20px]">
-                      <DialogHeader>
-                        <DialogTitle></DialogTitle>
-                        <DialogDescription></DialogDescription>
-                        <Calendar
-                          className="w-full h-full"
-                          mode="single"
-                          selected={date}
-                          onSelect={setDate}
-                          initialFocus
-                        />
-                      </DialogHeader>
-                    </DialogContent>
-                  </Dialog>
+                  {!date ? (
+                    <>
+                      <Dialog>
+                        <DialogTrigger>
+                          <h1 className="font-semibold text-task-text-gray">
+                            Deadline
+                          </h1>
+                        </DialogTrigger>
+                        <DialogContent className="w-[315px] h-[298px] rounded-[20px]">
+                          <DialogHeader>
+                            <DialogTitle></DialogTitle>
+
+                            <DialogDescription></DialogDescription>
+                            <Calendar
+                              className="w-full h-full"
+                              mode="single"
+                              selected={date}
+                              onSelect={setDate}
+                              initialFocus
+                            />
+                          </DialogHeader>
+                        </DialogContent>
+                      </Dialog>
+                    </>
+                  ) : (
+                    <>
+                      <Dialog>
+                        <DialogTrigger className="font-semibold text-task-text-gray text-sm">
+                          <>{date ? format(date, 'dd-mm-yyyy') : null}</>
+                        </DialogTrigger>
+                        <DialogContent className="w-[315px] h-[298px] rounded-[20px]">
+                          <DialogHeader>
+                            <DialogTitle></DialogTitle>
+                            <DialogDescription></DialogDescription>
+                            <Calendar
+                              className="w-full h-full"
+                              mode="single"
+                              selected={date}
+                              onSelect={setDate}
+                              initialFocus
+                            />
+                          </DialogHeader>
+                        </DialogContent>
+                      </Dialog>
+                    </>
+                  )}
                 </>
               )}
             </div>

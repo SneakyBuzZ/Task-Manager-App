@@ -7,10 +7,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useChangeTaskStatusApi } from '@/lib/query/query';
+import { useChangeTaskStatusApi, useDeleteTaskApi } from '@/lib/query/query';
 import { taskStatus } from '@/lib/types';
 import { Ellipsis } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import CreateTaskButton from './CreateTaskButton';
+import { Dialog } from '@/components/ui/dialog';
 
 type taskMenu =
   | 'Start Task'
@@ -22,9 +24,15 @@ type taskMenu =
 function TaskCardMenu({
   taskId,
   status,
+  title,
+  description,
+  deadline,
 }: {
   taskId: string;
   status: taskStatus;
+  title: string;
+  description: string;
+  deadline: Date | string;
 }) {
   const { mutateAsync: changeTaskStatus } = useChangeTaskStatusApi();
   const [menuLabel1, setMenuLabel1] = useState<taskMenu | string>('');
@@ -83,31 +91,55 @@ function TaskCardMenu({
     window.location.reload();
   };
 
+  const { mutateAsync: deleteTaskApi } = useDeleteTaskApi();
+  const handleDelete = async (taskId: string) => {
+    await deleteTaskApi({ taskId });
+
+    window.location.reload();
+  };
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Ellipsis className="size-5 cursor-pointer" />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuLabel>Task Menu</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem
-            onClick={() => handleClick(menuLabel1 as taskMenu)}
-            className="cursor-pointer"
-          >
-            {menuLabel1}
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => handleClick(menuLabel2 as taskMenu)}
-            className="cursor-pointer"
-          >
-            {menuLabel2}
-          </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer">Edit</DropdownMenuItem>
-        </DropdownMenuGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Dialog>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Ellipsis className="size-5 cursor-pointer" />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuLabel>Task Menu</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem
+              onClick={() => handleClick(menuLabel1 as taskMenu)}
+              className="cursor-pointer"
+            >
+              {menuLabel1}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => handleClick(menuLabel2 as taskMenu)}
+              className="cursor-pointer"
+            >
+              {menuLabel2}
+            </DropdownMenuItem>
+            <CreateTaskButton
+              title={title}
+              description={description}
+              deadline={deadline}
+              taskId={taskId}
+            >
+              <h1 className="text-sm text-start px-2 py-[6px] hover:bg-neutral-100 rounded-sm">
+                Edit
+              </h1>
+            </CreateTaskButton>
+            <DropdownMenuItem
+              onClick={() => handleDelete(taskId)}
+              className="cursor-pointer"
+            >
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </Dialog>
   );
 }
 
