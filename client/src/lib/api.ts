@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { createTaskApiProps } from './types';
+import { createTaskApiProps, taskStatus } from './types';
 import { delay } from './utils';
 
 const server = import.meta.env.VITE_SERVER_URL;
@@ -22,4 +22,18 @@ export const getAllTaskApi = async () => {
   await delay(500);
 
   return data.data;
+};
+
+export const changeTaskStatusApi = async ({
+  taskId,
+  status,
+}: {
+  taskId: string;
+  status: taskStatus;
+}) => {
+  console.log('API TASK ID: ', taskId);
+  await axios.put(`${server}/tasks`, {
+    taskId: taskId,
+    status: status,
+  });
 };

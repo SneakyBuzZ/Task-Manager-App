@@ -9,4 +9,8 @@ export type individualTaskType = {
   content: string;
   deadline: Date;
   priority: string;
+  id: string;
+  status: taskStatus;
 };
+
+export type taskStatus = 'ToDo' | 'OnProgress' | 'Done';

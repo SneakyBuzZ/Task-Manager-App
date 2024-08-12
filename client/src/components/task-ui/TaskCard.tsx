@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
-import { Ellipsis } from 'lucide-react';
+import TaskCardMenu from './TaskCardMenu';
 
 type taskCardPropType = {
   badgeLabel?: string;
@@ -8,6 +8,8 @@ type taskCardPropType = {
   taskTitle?: string;
   taskDescription?: string;
   taskDeadline?: Date | string;
+  taskId: string;
+  taskStatus: 'OnProgress' | 'Done' | 'ToDo';
 };
 
 const TaskCard = ({
@@ -16,14 +18,24 @@ const TaskCard = ({
   taskTitle,
   taskDescription,
   taskDeadline,
+  taskId,
+  taskStatus,
 }: taskCardPropType) => {
+  console.log(badgeClass);
   return (
     <>
       <div className="flex items-center justify-end md:justify-between  font-task-inter">
-        <Badge className={` rounded-md hidden md:block ` + ` ` + badgeClass}>
+        <Badge
+          className={
+            ` rounded-md hidden md:block bg-task-badge-` +
+            badgeClass +
+            ` text-task-badge-text-` +
+            badgeClass
+          }
+        >
           {badgeLabel}
         </Badge>
-        <Ellipsis className="size-5" />
+        <TaskCardMenu taskId={taskId} status={taskStatus} />
       </div>
       <div className="flex flex-col justify-between h-[70%]">
         <div className="flex-col gap-2">

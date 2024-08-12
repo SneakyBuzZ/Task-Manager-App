@@ -3,6 +3,7 @@ import TaskCard from '../task-ui/TaskCard';
 import { useEffect, useState } from 'react';
 import { useGetAllTaskApi } from '@/lib/query/query';
 import { individualTaskType } from '@/lib/types';
+import TaskSkeleton from '../task-ui/TaskSkeleton';
 
 const TaskSlider = () => {
   const [onProgressTasks, setOnProgressTasks] = useState<individualTaskType[]>(
@@ -10,11 +11,10 @@ const TaskSlider = () => {
   );
   const [doneTasks, setDoneTasks] = useState<individualTaskType[]>([]);
   const [toDoTasks, setToDoTasks] = useState<individualTaskType[]>([]);
-  const { mutateAsync: getAllTaskApi } = useGetAllTaskApi();
+  const { mutateAsync: getAllTaskApi, isPending } = useGetAllTaskApi();
   useEffect(() => {
     getAllTaskApi()
       .then((response) => {
-        console.log(response);
         setToDoTasks(response.toDoTasks);
         setDoneTasks(response.doneTasks);
         setOnProgressTasks(response.onProgressTasks);
@@ -45,20 +45,24 @@ const TaskSlider = () => {
                 className="w-1/3 lg:w-full h-full lg:h-1/3 bg-task-white rounded-md px-3 md:px-5 py-2 lg:py-4 flex flex-col justify-start gap-2"
               >
                 <TaskCard
-                  badgeClass={
-                    'bg-task-badge-' +
-                    each.priority.toLowerCase() +
-                    ' text-task-badge-text-' +
-                    each.priority.toLowerCase()
-                  }
+                  badgeClass={each.priority.toLowerCase()}
                   taskTitle={each.title}
                   taskDescription={each.content}
                   taskDeadline={each.deadline}
                   badgeLabel={each.priority}
+                  taskId={each.id}
+                  taskStatus={each.status}
                 />
               </li>
             );
           })}
+          {isPending && (
+            <>
+              <TaskSkeleton />
+              <TaskSkeleton />
+              <TaskSkeleton />
+            </>
+          )}
         </aside>
       </div>
       {/* THIS IS SLIDER 2 */}
@@ -81,20 +85,24 @@ const TaskSlider = () => {
                 className="w-1/3 lg:w-full h-full lg:h-1/3 bg-task-white rounded-md px-3 md:px-5 py-2 lg:py-4 flex flex-col justify-start gap-2"
               >
                 <TaskCard
-                  badgeClass={
-                    'bg-task-badge-' +
-                    each.priority.toLowerCase() +
-                    ' text-task-badge-text-' +
-                    each.priority.toLowerCase()
-                  }
+                  badgeClass={each.priority.toLowerCase()}
                   taskTitle={each.title}
                   taskDescription={each.content}
                   taskDeadline={each.deadline}
                   badgeLabel={each.priority}
+                  taskId={each.id}
+                  taskStatus={each.status}
                 />
               </li>
             );
           })}
+          {isPending && (
+            <>
+              <TaskSkeleton />
+              <TaskSkeleton />
+              <TaskSkeleton />
+            </>
+          )}
         </div>
       </div>
       {/* THIS IS SLIDER 3 */}
@@ -117,20 +125,24 @@ const TaskSlider = () => {
                 className="w-1/3 lg:w-full h-full lg:h-1/3 bg-task-white rounded-md px-3 md:px-5 py-2 lg:py-4 flex flex-col justify-start gap-2"
               >
                 <TaskCard
-                  badgeClass={
-                    'bg-task-badge-' +
-                    each.priority.toLowerCase() +
-                    ' text-task-badge-text-' +
-                    each.priority.toLowerCase()
-                  }
+                  badgeClass={each.priority.toLowerCase()}
                   taskTitle={each.title}
                   taskDescription={each.content}
                   taskDeadline={each.deadline}
                   badgeLabel={each.priority}
+                  taskId={each.id}
+                  taskStatus={each.status}
                 />
               </li>
             );
           })}
+          {isPending && (
+            <>
+              <TaskSkeleton />
+              <TaskSkeleton />
+              <TaskSkeleton />
+            </>
+          )}
         </div>
       </div>
     </section>
