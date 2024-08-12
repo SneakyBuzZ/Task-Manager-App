@@ -30,6 +30,10 @@ app.use(cookieParser());
 
 //############## ROUTES #####################
 
+import { taskRouter } from '../src/routes/task.route';
+
+app.use('/taskmanager/api/v1', taskRouter);
+
 app.get('/', (req: Request, res: Response) => {
     res.send('WORKING');
 });

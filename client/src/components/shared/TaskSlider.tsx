@@ -1,7 +1,28 @@
 import SliderBadge from '@/components/task-ui/SliderBadge';
 import TaskCard from '../task-ui/TaskCard';
+import { useEffect, useState } from 'react';
+import { useGetAllTaskApi } from '@/lib/query/query';
+import { individualTaskType } from '@/lib/types';
 
 const TaskSlider = () => {
+  const [onProgressTasks, setOnProgressTasks] = useState<individualTaskType[]>(
+    []
+  );
+  const [doneTasks, setDoneTasks] = useState<individualTaskType[]>([]);
+  const [toDoTasks, setToDoTasks] = useState<individualTaskType[]>([]);
+  const { mutateAsync: getAllTaskApi } = useGetAllTaskApi();
+  useEffect(() => {
+    getAllTaskApi()
+      .then((response) => {
+        console.log(response);
+        setToDoTasks(response.toDoTasks);
+        setDoneTasks(response.doneTasks);
+        setOnProgressTasks(response.onProgressTasks);
+      })
+      .catch((err) => {
+        console.log('ERROR: ', err);
+      });
+  }, []);
   return (
     <section className="h-[92%] lg:h-full flex flex-col lg:flex-row justify-between w-full gap-4 md:pl-0 lg:pl-8">
       {/* THIS IS SLIDER 1 */}
@@ -16,9 +37,28 @@ const TaskSlider = () => {
           <div className="bg-task-toDo h-[1.5px] lg:h-[3px] rounded-full w-full hidden lg:block" />
         </article>
         <aside className="flex flex-row lg:flex-col w-full h-full gap-2 lg:gap-5 lg:py-4">
-          <TaskCard />
-          <TaskCard />
-          <TaskCard />
+          {toDoTasks.map((each) => {
+            console.log(each.priority.toLowerCase());
+            return (
+              <li
+                key={each.title}
+                className="w-1/3 lg:w-full h-full lg:h-1/3 bg-task-white rounded-md px-3 md:px-5 py-2 lg:py-4 flex flex-col justify-start gap-2"
+              >
+                <TaskCard
+                  badgeClass={
+                    'bg-task-badge-' +
+                    each.priority.toLowerCase() +
+                    ' text-task-badge-text-' +
+                    each.priority.toLowerCase()
+                  }
+                  taskTitle={each.title}
+                  taskDescription={each.content}
+                  taskDeadline={each.deadline}
+                  badgeLabel={each.priority}
+                />
+              </li>
+            );
+          })}
         </aside>
       </div>
       {/* THIS IS SLIDER 2 */}
@@ -33,9 +73,28 @@ const TaskSlider = () => {
           <div className="bg-task-onProgress h-[1.5px] lg:h-[3px] rounded-full w-full hidden lg:block" />
         </div>
         <div className="flex flex-row lg:flex-col w-full h-full gap-2 lg:py-4 lg:gap-5">
-          <TaskCard />
-          <TaskCard />
-          <TaskCard />
+          {onProgressTasks.map((each) => {
+            console.log(each.priority.toLowerCase());
+            return (
+              <li
+                key={each.title}
+                className="w-1/3 lg:w-full h-full lg:h-1/3 bg-task-white rounded-md px-3 md:px-5 py-2 lg:py-4 flex flex-col justify-start gap-2"
+              >
+                <TaskCard
+                  badgeClass={
+                    'bg-task-badge-' +
+                    each.priority.toLowerCase() +
+                    ' text-task-badge-text-' +
+                    each.priority.toLowerCase()
+                  }
+                  taskTitle={each.title}
+                  taskDescription={each.content}
+                  taskDeadline={each.deadline}
+                  badgeLabel={each.priority}
+                />
+              </li>
+            );
+          })}
         </div>
       </div>
       {/* THIS IS SLIDER 3 */}
@@ -50,9 +109,28 @@ const TaskSlider = () => {
           <div className="bg-task-badge-text-completed h-[1.5px] lg:h-[3px] rounded-full w-full hidden lg:block" />
         </div>
         <div className="flex flex-row lg:flex-col w-full h-full gap-2 lg:py-4 lg:gap-5">
-          <TaskCard />
-          <TaskCard />
-          <TaskCard />
+          {doneTasks.map((each) => {
+            console.log(each.priority.toLowerCase());
+            return (
+              <li
+                key={each.title}
+                className="w-1/3 lg:w-full h-full lg:h-1/3 bg-task-white rounded-md px-3 md:px-5 py-2 lg:py-4 flex flex-col justify-start gap-2"
+              >
+                <TaskCard
+                  badgeClass={
+                    'bg-task-badge-' +
+                    each.priority.toLowerCase() +
+                    ' text-task-badge-text-' +
+                    each.priority.toLowerCase()
+                  }
+                  taskTitle={each.title}
+                  taskDescription={each.content}
+                  taskDeadline={each.deadline}
+                  badgeLabel={each.priority}
+                />
+              </li>
+            );
+          })}
         </div>
       </div>
     </section>

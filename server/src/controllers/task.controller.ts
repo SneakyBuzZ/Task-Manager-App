@@ -1,33 +1,89 @@
 import { Request, Response } from 'express';
-import { asyncHandler, ApiResponse, db, ApiError } from '@src/utils';
-import { TaskStatus } from '@src/utils/types';
+import { asyncHandler, ApiResponse, db, ApiError } from '../utils';
+import { TaskStatus } from '../utils/types';
 import axios from 'axios';
 
 export const getAllTasks = asyncHandler(async (req: Request, res: Response) => {
-    let { limit, skip } = req.query;
+    let { limit = 3, skip = 0 } = req.query;
 
-    if (!limit || !skip) {
-        throw new ApiError(
-            400,
-            'GET ALL TASKS : TASK CONTROLLER : limit and skip are required'
-        );
-    }
-
+    const allDoneTasks = await db.task.findMany({
+        where: {
+            status: 'Done',
+        },
+        take: Number(limit),
+        skip: Number(skip),
+        orderBy: {
+            deadline: 'asc',
+        },
+        select: {
+            title: true,
+            content: true,
+            deadline: true,
+            priority: true,
+        },
+    });
+    const allOnProgressTasks = await db.task.findMany({
+        where: {
+            status: 'OnProgress',
+        },
+        take: Number(limit),
+        skip: Number(skip),
+        orderBy: {
+            deadline: 'asc',
+        },
+        select: {
+            title: true,
+            content: true,
+            deadline: true,
+            priority: true,
+        },
+    });
+    const allToDoTasks = await db.task.findMany({
+        where: {
+            status: 'ToDo',
+        },
+        take: Number(limit),
+        skip: Number(skip),
+        orderBy: {
+            deadline: 'asc',
+        },
+        select: {
+            title: true,
+            content: true,
+            deadline: true,
+            priority: true,
+        },
+    });
     const allTasks = await db.task.findMany({
         take: Number(limit),
         skip: Number(skip),
         orderBy: {
             deadline: 'asc',
         },
+        select: {
+            title: true,
+            content: true,
+            deadline: true,
+            priority: true,
+        },
     });
 
-    if (!allTasks) {
+    if (!allDoneTasks || !allOnProgressTasks || !allToDoTasks) {
         return res.status(404).json(new ApiResponse(404, {}, 'No tasks found'));
     }
 
-    return res
-        .status(200)
-        .json(new ApiResponse(200, allTasks, 'Successfully fetched tasks'));
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            {
+                doneTasks: allDoneTasks,
+                onProgressTasks: allOnProgressTasks,
+                toDoTasks: allToDoTasks,
+                allTasks: allTasks,
+            },
+            'Successfully fetched tasks'
+        )
+    );
 });
 
 export const getTaskById = asyncHandler(async (req: Request, res: Response) => {
@@ -58,14 +114,14 @@ export const getTaskById = asyncHandler(async (req: Request, res: Response) => {
 export const createTask = asyncHandler(async (req: Request, res: Response) => {
     const { title, content, deadline } = req.body;
 
-    [title, content, deadline].some((each) => {
-        if (!each) {
-            throw new ApiError(
-                400,
-                'CREATE TASK: TASK CONTROLLER : All fields are required'
-            );
-        }
-    });
+    console.log('TITLE: ', title);
+    console.log('CONTENT: ', content);
+
+    if (
+        [title, content, deadline].some((eachItem) => eachItem?.trim() === '')
+    ) {
+        throw new ApiError(400, 'All fields are required');
+    }
 
     const newTask = await db.task.create({
         data: {

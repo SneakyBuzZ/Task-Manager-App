@@ -5,10 +5,10 @@ import {
     getTaskById,
     streamingApi,
     updateTask,
-} from '@src/controllers/task.controller';
+} from '../controllers/task.controller';
 import { Router } from 'express';
 
-export const taskRouter = Router();
+export const taskRouter: Router = Router();
 
 taskRouter.route('/tasks').get(getAllTasks);
 taskRouter.route('/tasks/:id').get(getTaskById);

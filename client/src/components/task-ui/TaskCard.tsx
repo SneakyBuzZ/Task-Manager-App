@@ -1,4 +1,5 @@
 import { Badge } from '@/components/ui/badge';
+import { format } from 'date-fns';
 import { Ellipsis } from 'lucide-react';
 
 type taskCardPropType = {
@@ -6,7 +7,7 @@ type taskCardPropType = {
   badgeClass?: string;
   taskTitle?: string;
   taskDescription?: string;
-  taskDeadline?: string;
+  taskDeadline?: Date | string;
 };
 
 const TaskCard = ({
@@ -17,7 +18,7 @@ const TaskCard = ({
   taskDeadline,
 }: taskCardPropType) => {
   return (
-    <div className="w-1/3 lg:w-full h-full lg:h-1/3 bg-task-white rounded-md px-3 md:px-5 py-2 lg:py-4 flex flex-col justify-start gap-2">
+    <>
       <div className="flex items-center justify-end md:justify-between  font-task-inter">
         <Badge className={` rounded-md hidden md:block ` + ` ` + badgeClass}>
           {badgeLabel}
@@ -33,14 +34,12 @@ const TaskCard = ({
         </div>
         <div className="flex items-center flex-wrap font-task-poppins gap-1">
           <span className="font-bold text-xs text-task-border-gray">
-            Deadline :
+            {taskDeadline ? format(taskDeadline, 'PPP') : null}
           </span>
-          <span className="font-semibold text-xs text-task-border-gray">
-            {taskDeadline}
-          </span>
+          <span className="font-semibold text-xs text-task-border-gray"></span>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

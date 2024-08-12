@@ -23,6 +23,7 @@ import React from 'react';
 import { format } from 'date-fns';
 import { ToastAction } from '@/components/ui/toast';
 import { useToast } from '@/components/ui/use-toast';
+import { useCreateTaskApi } from '@/lib/query/query';
 
 const CreateTaskForm = () => {
   const { toast } = useToast();
@@ -35,12 +36,14 @@ const CreateTaskForm = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof createTaskSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
-    console.log(date);
-    console.log('YES YES YES');
+  const { mutateAsync: createTaskApi } = useCreateTaskApi();
+
+  async function onSubmit(values: z.infer<typeof createTaskSchema>) {
+    await createTaskApi({
+      title: values.taskTitle,
+      content: values.taskDescription,
+      deadline: date!,
+    });
 
     toast({
       title: 'Uh oh! Something went wrong.',
@@ -144,7 +147,7 @@ const CreateTaskForm = () => {
                 type="submit"
                 variant={'link'}
               >
-                Assigned To
+                Assigned to
               </Button>
             </DialogTrigger>
           </div>
