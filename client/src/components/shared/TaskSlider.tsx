@@ -1,0 +1,62 @@
+import SliderBadge from '@/components/task-ui/SliderBadge';
+import TaskCard from '../task-ui/TaskCard';
+
+const TaskSlider = () => {
+  return (
+    <section className="h-[92%] lg:h-full flex flex-col lg:flex-row justify-between w-full gap-4 md:pl-0 lg:pl-8">
+      {/* THIS IS SLIDER 1 */}
+      <div className="h-1/3 lg:h-[97%] w-full lg:w-[30%] shadow-task-shadow bg-task-gray rounded-md shadow-md flex flex-col items-start lg:items-center p-1 px-2 pb-2 lg:px-6 lg:p-3">
+        <article className="flex flex-col w-13 lg:w-full">
+          <SliderBadge
+            className="lg:justify-center"
+            label="To Do"
+            listColor="bg-task-toDo"
+            number="3"
+          />
+          <div className="bg-task-toDo h-[1.5px] lg:h-[3px] rounded-full w-full hidden lg:block" />
+        </article>
+        <aside className="flex flex-row lg:flex-col w-full h-full gap-2 lg:gap-5 lg:py-4">
+          <TaskCard />
+          <TaskCard />
+          <TaskCard />
+        </aside>
+      </div>
+      {/* THIS IS SLIDER 2 */}
+      <div className="h-1/3 lg:h-[97%] w-full lg:w-[30%] shadow-task-shadow bg-task-gray rounded-md shadow-md flex flex-col items-start lg:items-center p-1 px-2 pb-2 lg:p-3 ">
+        <div className="flex flex-col w-13 lg:w-full">
+          <SliderBadge
+            className="lg:justify-center"
+            label="On Progress"
+            listColor="bg-task-onProgress"
+            number="3"
+          />
+          <div className="bg-task-onProgress h-[1.5px] lg:h-[3px] rounded-full w-full hidden lg:block" />
+        </div>
+        <div className="flex flex-row lg:flex-col w-full h-full gap-2 lg:py-4 lg:gap-5">
+          <TaskCard />
+          <TaskCard />
+          <TaskCard />
+        </div>
+      </div>
+      {/* THIS IS SLIDER 3 */}
+      <div className="h-1/3 lg:h-[97%] w-full lg:w-[30%] shadow-task-shadow bg-task-gray rounded-md shadow-md flex flex-col items-start lg:items-center p-1 px-2 pb-2 lg:p-3 ">
+        <div className="flex flex-col w-13 lg:w-full">
+          <SliderBadge
+            className="lg:justify-center"
+            label="Completed"
+            listColor="bg-task-completed"
+            number="3"
+          />
+          <div className="bg-task-badge-text-completed h-[1.5px] lg:h-[3px] rounded-full w-full hidden lg:block" />
+        </div>
+        <div className="flex flex-row lg:flex-col w-full h-full gap-2 lg:py-4 lg:gap-5">
+          <TaskCard />
+          <TaskCard />
+          <TaskCard />
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default TaskSlider;
