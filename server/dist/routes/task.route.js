@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.taskRouter = void 0;
-var task_controller_1 = require("../controllers/task.controller");
-var express_1 = require("express");
+const task_controller_1 = require("../controllers/task.controller");
+const express_1 = require("express");
 exports.taskRouter = (0, express_1.Router)();
 // ALL THE API ROUTES THAT WERE MENTIONED
 exports.taskRouter.route('/tasks').get(task_controller_1.getAllTasks);

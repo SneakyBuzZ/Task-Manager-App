@@ -1,14 +1,16 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = require("express");
-var dotenv_1 = require("dotenv");
-var cors_1 = require("cors");
-var cookie_parser_1 = require("cookie-parser");
-require("module-alias/register");
+const express_1 = __importDefault(require("express"));
+const dotenv_1 = __importDefault(require("dotenv"));
+const cors_1 = __importDefault(require("cors"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 dotenv_1.default.config();
 //############## APP ##################
-var app = (0, express_1.default)();
-var PORT = process.env.PORT;
+const app = (0, express_1.default)();
+const PORT = process.env.PORT;
 //################ UTILITIES #############
 app.use((0, cors_1.default)({
     origin: process.env.CORS_ORIGIN,
@@ -19,11 +21,11 @@ app.use(express_1.default.urlencoded({ extended: true, limit: '16kb' }));
 app.use(express_1.default.static('public'));
 app.use((0, cookie_parser_1.default)());
 //############## ROUTES #####################
-var task_route_1 = require("../src/routes/task.route");
+const task_route_1 = require("../src/routes/task.route");
 app.use('/taskmanager/api/v1', task_route_1.taskRouter);
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
     res.send('WORKING');
 });
-app.listen(PORT, function () {
+app.listen(PORT, () => {
     console.log('App is listening on port: ', PORT);
 });
