@@ -5,7 +5,8 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "dev": "npx nodemon",
-        "build": "npx nodemon -r dotenv/config --experimental-json-modules src/index.js"
+        "build": "tsc && cp -r prisma/client dist/prisma",
+        "deploy": "npm run build && node index.js"
     },
     "keywords": [],
     "author": "",
