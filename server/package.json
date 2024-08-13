@@ -5,8 +5,8 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "dev": "npx nodemon",
-        "build": "npx prisma generate && rimraf dist && tsc -b",
-        "start": "node dist/index.js"
+        "build": "npm install",
+        "start": "npx prisma generate && node dist/index.js"
     },
     "keywords": [],
     "author": "",
@@ -28,9 +28,7 @@
         "axios": "^1.7.3",
         "cookie-parser": "^1.4.6",
         "cors": "^2.8.5",
-        "cuid": "^3.0.0",
         "dotenv": "^16.4.5",
-        "express": "^4.19.2",
-        "module-alias": "^2.2.3"
+        "express": "^4.19.2"
     }
 }
