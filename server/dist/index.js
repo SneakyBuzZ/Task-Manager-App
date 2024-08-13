@@ -21,7 +21,7 @@ app.use(express_1.default.urlencoded({ extended: true, limit: '16kb' }));
 app.use(express_1.default.static('public'));
 app.use((0, cookie_parser_1.default)());
 //############## ROUTES #####################
-const task_route_1 = require("../src/routes/task.route");
+const task_route_1 = require("./routes/task.route");
 app.use('/taskmanager/api/v1', task_route_1.taskRouter);
 app.get('/', (req, res) => {
     res.send('WORKING');

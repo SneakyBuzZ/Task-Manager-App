@@ -29,7 +29,7 @@ app.use(cookieParser());
 
 //############## ROUTES #####################
 
-import { taskRouter } from '../src/routes/task.route';
+import { taskRouter } from './routes/task.route';
 
 app.use('/taskmanager/api/v1', taskRouter);
 
