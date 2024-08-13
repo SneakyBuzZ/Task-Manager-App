@@ -18,7 +18,21 @@ A robust and efficient Task Manager application designed to streamline your dail
 
 2. Set up environment variables by filling in the required details in the .env file.
 
-3. Start the development server :
+3. Generate Prisma client:
+
+   ```bash
+   npx prisma generate
+
+   ```
+
+4. Push the Prisma schema to your database :
+
+   ```bash
+   npx prisma db push
+
+   ```
+
+5. Start the development server :
 
    ```bash
    npm run dev
