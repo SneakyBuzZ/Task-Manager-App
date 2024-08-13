@@ -2,7 +2,6 @@ import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import 'module-alias/register';
 
 dotenv.config();
 
